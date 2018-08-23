@@ -1,6 +1,6 @@
 const initModel = {
-    descriptionInput: "",
-    caloriesInput: 0,
+    description: "",
+    calories: 0,
     showForm: false,
     nextId: 0,
     editId: null,
