@@ -36,15 +36,13 @@ function fieldSet(labelText, inputValue, oninput) {
             },
             labelText
         ),
-        input(
-            {
-                className: "pa2 input-reset ba w-100 mb2",
-                type: "text",
-                id: `${labelText}-input`,
-                oninput
-            },
-            inputValue
-        )
+        input({
+            className: "pa2 input-reset ba w-100 mb2",
+            type: "text",
+            id: `${labelText}-input`,
+            value: inputValue,
+            oninput
+        })
     ]);
 }
 
