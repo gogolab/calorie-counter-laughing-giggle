@@ -5,7 +5,8 @@ import {
     showFormMsg,
     mealInputMsg,
     caloriesInputMsg,
-    saveMealMsg
+    saveMealMsg,
+    deleteMealMsg
 } from "./Update";
 
 const {
@@ -21,7 +22,8 @@ const {
     tbody,
     td,
     tr,
-    th
+    th,
+    i
 } = hh(h);
 
 function fieldSet(labelText, inputValue, oninput) {
@@ -106,19 +108,23 @@ const tableHeader = thead(
     ])
 );
 
-function mealsBody(meals) {
+function mealsBody(dispatch, meals) {
     const rows = meals.map(meal => {
-        return mealRow(meal);
+        return mealRow(dispatch, meal);
     });
 
     return tbody({ className: "" }, [...rows, totalRow(meals)]);
 }
 
-function mealRow(meal) {
+function mealRow(dispatch, meal) {
     return tr({ className: "stripe-dark" }, [
         cell(td, "pa2", meal.description),
         cell(td, "pa2 tr", meal.calories),
-        cell(td, "pa2 tr", "icons")
+        cell(
+            td,
+            "pa2 tr",
+            i({ onclick: () => dispatch(deleteMealMsg(meal.id)) }, "delete")
+        )
     ]);
 }
 
@@ -145,7 +151,7 @@ function tableView(dispatch, meals) {
 
     return table({ className: "mv2 w-100 collapse" }, [
         tableHeader,
-        mealsBody(meals)
+        mealsBody(dispatch, meals)
     ]);
 }
 
