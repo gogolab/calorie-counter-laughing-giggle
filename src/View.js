@@ -8,7 +8,21 @@ import {
     saveMealMsg
 } from "./Update";
 
-const { pre, div, h1, button, form, label, input } = hh(h);
+const {
+    pre,
+    div,
+    h1,
+    button,
+    form,
+    label,
+    input,
+    table,
+    thead,
+    tbody,
+    td,
+    tr,
+    th
+} = hh(h);
 
 function fieldSet(labelText, inputValue, oninput) {
     return div({}, [
@@ -84,6 +98,52 @@ function formView(dispatch, model) {
     }
 }
 
+const tableHeader = thead(
+    tr([
+        tableHeaderCell("", "Meal"),
+        tableHeaderCell("", "Calories"),
+        tableHeaderCell("", "")
+    ])
+);
+
+function tableHeaderCell(className, value) {
+    return th({ className }, value);
+}
+
+function mealsBody(model) {
+    const lines = model.meals.map(meal => {
+        return mealRow(meal);
+    });
+
+    return tbody({ className: "ba bw1" }, [lines, totalRow(model)]);
+}
+
+function mealRow(meal) {
+    return tr({ className: "" }, [
+        cell(meal.description),
+        cell(meal.calories),
+        cell("icons")
+    ]);
+}
+
+function cell(value) {
+    return td({ className: "ba bw1" }, value);
+}
+
+function totalRow(model) {
+    const total = model.meals
+        .map(meal => meal.calories)
+        .reduce((total, count) => {
+            return total + count;
+        }, 0);
+
+    return tr({ className: "b" }, [cell("total:"), cell(total), cell("")]);
+}
+
+function tableView(model) {
+    return table({ className: "" }, [tableHeader, mealsBody(model)]);
+}
+
 function view(dispatch, model) {
     return div(
         {
@@ -92,6 +152,7 @@ function view(dispatch, model) {
         [
             h1({ className: "f2 pv2 bb" }, "Calorie Counter"),
             formView(dispatch, model),
+            tableView(model),
             pre(JSON.stringify(model, null, 2))
         ]
     );
