@@ -167,8 +167,8 @@ function view(dispatch, model) {
         [
             h1({ className: "f2 pv2 bb" }, "Calorie Counter"),
             formView(dispatch, model),
-            tableView(dispatch, model.meals),
-            pre(JSON.stringify(model, null, 2))
+            tableView(dispatch, model.meals)
+            // pre(JSON.stringify(model, null, 2))
         ]
     );
 }
