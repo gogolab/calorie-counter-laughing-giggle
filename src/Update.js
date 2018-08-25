@@ -5,7 +5,8 @@ const MSGS = {
     MEAL_INPUT: "MEAL_INPUT",
     CALORIES_INPUT: "CALORIES_INPUT",
     SAVE_MEAL: "SAVE_MEAL",
-    DELETE_MEAL: "DELETE_MEAL"
+    DELETE_MEAL: "DELETE_MEAL",
+    EDIT_MEAL: "EDIT_MEAL"
 };
 
 function showFormMsg(showForm) {
@@ -40,6 +41,13 @@ function caloriesInputMsg(calories) {
     };
 }
 
+function editMealMsg(editId) {
+    return {
+        type: MSGS.EDIT_MEAL,
+        editId
+    };
+}
+
 function update(msg, model) {
     switch (msg.type) {
         case MSGS.SHOW_FORM:
@@ -71,6 +79,22 @@ function update(msg, model) {
             const { id } = msg;
             const meals = model.meals.filter(meal => meal.id !== id);
             return { ...model, meals };
+        case MSGS.EDIT_MEAL:
+            const { editId } = msg;
+            const meal = model.meals.find(meal => meal.id === editId);
+            const {
+                description: editDescription,
+                calories: editCalories
+            } = meal;
+
+            return {
+                ...model,
+                description: editDescription,
+                calories: editCalories,
+                editId,
+                showForm: true
+            };
+
         default:
             console.log("bad message");
             return model;
@@ -98,5 +122,6 @@ export {
     mealInputMsg,
     caloriesInputMsg,
     saveMealMsg,
-    deleteMealMsg
+    deleteMealMsg,
+    editMealMsg
 };

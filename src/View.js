@@ -6,7 +6,8 @@ import {
     mealInputMsg,
     caloriesInputMsg,
     saveMealMsg,
-    deleteMealMsg
+    deleteMealMsg,
+    editMealMsg
 } from "./Update";
 
 const {
@@ -120,14 +121,16 @@ function mealRow(dispatch, meal) {
     return tr({ className: "stripe-dark" }, [
         cell(td, "pa2", meal.description),
         cell(td, "pa2 tr", meal.calories),
-        cell(
-            td,
-            "pa2 tr",
+        cell(td, "pa2 tr", [
             i({
                 className: "ph1 fa fa-trash-o pointer",
                 onclick: () => dispatch(deleteMealMsg(meal.id))
+            }),
+            i({
+                className: "ph1 fa fa-pencil-square-o pointer",
+                onclick: () => dispatch(editMealMsg(meal.id))
             })
-        )
+        ])
     ]);
 }
 
