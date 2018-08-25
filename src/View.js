@@ -100,48 +100,53 @@ function formView(dispatch, model) {
 
 const tableHeader = thead(
     tr([
-        tableHeaderCell("", "Meal"),
-        tableHeaderCell("", "Calories"),
-        tableHeaderCell("", "")
+        cell(th, "pa2 tl", "Meal"),
+        cell(th, "pa2 tr", "Calories"),
+        cell(th, "", "")
     ])
 );
 
-function tableHeaderCell(className, value) {
-    return th({ className }, value);
-}
-
-function mealsBody(model) {
-    const lines = model.meals.map(meal => {
+function mealsBody(meals) {
+    const rows = meals.map(meal => {
         return mealRow(meal);
     });
 
-    return tbody({ className: "ba bw1" }, [lines, totalRow(model)]);
+    return tbody({ className: "" }, [...rows, totalRow(meals)]);
 }
 
 function mealRow(meal) {
-    return tr({ className: "" }, [
-        cell(meal.description),
-        cell(meal.calories),
-        cell("icons")
+    return tr({ className: "stripe-dark" }, [
+        cell(td, "pa2", meal.description),
+        cell(td, "pa2 tr", meal.calories),
+        cell(td, "pa2 tr", "icons")
     ]);
 }
 
-function cell(value) {
-    return td({ className: "ba bw1" }, value);
+function cell(tag, className, value) {
+    return tag({ className }, value);
 }
 
-function totalRow(model) {
-    const total = model.meals
-        .map(meal => meal.calories)
-        .reduce((total, count) => {
-            return total + count;
-        }, 0);
+function totalRow(meals) {
+    const total = meals.map(meal => meal.calories).reduce((total, count) => {
+        return total + count;
+    }, 0);
 
-    return tr({ className: "b" }, [cell("total:"), cell(total), cell("")]);
+    return tr({ className: "b" }, [
+        cell(td, "pa2 tr", "total:"),
+        cell(td, "pa2 tr", total),
+        cell(td, "", "")
+    ]);
 }
 
-function tableView(model) {
-    return table({ className: "" }, [tableHeader, mealsBody(model)]);
+function tableView(dispatch, meals) {
+    if (meals.length === 0) {
+        return div({ className: "mv2 i black-50" }, "No meals to display.");
+    }
+
+    return table({ className: "mv2 w-100 collapse" }, [
+        tableHeader,
+        mealsBody(meals)
+    ]);
 }
 
 function view(dispatch, model) {
@@ -152,7 +157,7 @@ function view(dispatch, model) {
         [
             h1({ className: "f2 pv2 bb" }, "Calorie Counter"),
             formView(dispatch, model),
-            tableView(model),
+            tableView(dispatch, model.meals),
             pre(JSON.stringify(model, null, 2))
         ]
     );
