@@ -74,14 +74,17 @@ function update(msg, model) {
                 calories
             };
         case MSGS.SAVE_MEAL:
-            return add(msg, model);
+            const { editId } = model;
+            const updatedModel =
+                editId === null ? add(msg, model) : edit(msg, model);
+            return updatedModel;
         case MSGS.DELETE_MEAL:
             const { id } = msg;
             const meals = model.meals.filter(meal => meal.id !== id);
             return { ...model, meals };
         case MSGS.EDIT_MEAL:
-            const { editId } = msg;
-            const meal = model.meals.find(meal => meal.id === editId);
+            const { editId: editedMealId } = msg;
+            const meal = model.meals.find(meal => meal.id === editedMealId);
             const {
                 description: editDescription,
                 calories: editCalories
@@ -91,7 +94,7 @@ function update(msg, model) {
                 ...model,
                 description: editDescription,
                 calories: editCalories,
-                editId,
+                editId: editedMealId,
                 showForm: true
             };
 
@@ -112,6 +115,30 @@ function add(msg, model) {
         nextId: nextId + 1,
         description: "",
         calories: 0,
+        showForm: false
+    };
+}
+
+function edit(msg, model) {
+    const { description, calories, editId } = model;
+    const meals = model.meals.map(meal => {
+        if (meal.id === editId) {
+            return {
+                ...meal,
+                description,
+                calories
+            };
+        } else {
+            return meal;
+        }
+    });
+
+    return {
+        ...model,
+        meals,
+        description: "",
+        calories: 0,
+        editId: null,
         showForm: false
     };
 }
