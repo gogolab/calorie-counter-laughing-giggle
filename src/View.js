@@ -123,7 +123,10 @@ function mealRow(dispatch, meal) {
         cell(
             td,
             "pa2 tr",
-            i({ onclick: () => dispatch(deleteMealMsg(meal.id)) }, "delete")
+            i({
+                className: "ph1 fa fa-trash-o pointer",
+                onclick: () => dispatch(deleteMealMsg(meal.id))
+            })
         )
     ]);
 }
